@@ -1,5 +1,19 @@
 var issueContainerEl = document.querySelector("#issues-container");
 var limitWarningEl = document.querySelector("#limit-warning");
+var repoNameEl = document.querySelector("#repo-name");
+
+var getRepoName = function() {
+    var queryString = document.location.search;
+    var repoName = queryString.split("=")[1];
+    if(repoName){
+     repoNameEl.textContent = repoName;
+     getRepoIssues(repoName);
+
+    }
+    else {
+    document.location.replace("./index.html");
+    }
+  }
 
 var displayWarning = function(repo) {
     // add text to warning container
@@ -60,16 +74,16 @@ var getRepoIssues = function(repo) {
             displayIssues(data);
             // check if api has paginated issues
             if (response.headers.get("Link")) {
-                console.log("repo has more than 30 issues");
                 displayWarning(repo);
             }
   
           });
         }
         else {
-          alert("There was a problem with your request!");
+            // if not successful, redirect to homepage
+            document.location.replace("./index.html");
         }
       });
   };
   
-  getRepoIssues("facebook/buck");
+  getRepoName();
